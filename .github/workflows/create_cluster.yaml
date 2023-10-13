@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Build project
-        run: echo "Build started"
+        run: echo "Githubactions Workflow has started"
       - name: Displaying the input parameters provided
         run: cat input.yaml
         working-directory: infra-as-code/terraform/sample-aws
@@ -28,14 +28,10 @@ jobs:
       # Now, use the env vars in subsequent steps
       - name: Display environment variables
         run: |
-          echo "Cluster Name: $CLUSTER_NAME"
-          echo "SSH Key Name: $SSH_KEY_NAME"  
+          echo "Cluster Name: $CLUSTER_NAME"  
       - name: Change working directory
         run: echo "This command is run in the current directory"
         working-directory: infra-as-code/terraform/sample-aws/remote-state
-      - name: Displaying DB Password and key in egov-demo-secrets.yaml
-        run: cat egov-demo-secrets.yaml
-        working-directory: config-as-code/environments
       - name: Updating different files based on parameters provided in input.yaml
         run: go run init.go
         working-directory: infra-as-code/terraform/scripts
@@ -133,9 +129,6 @@ jobs:
         run: terraform apply -no-color -input=false -auto-approve
         continue-on-error: true  
         working-directory: infra-as-code/terraform/sample-aws/remote-state
-      - name: printing main.tf file
-        run: cat main.tf  
-        working-directory: infra-as-code/terraform/sample-aws
       - name: Terraform init - Infra creation
         id: init-Infra
         run: terraform init
@@ -192,7 +185,7 @@ jobs:
           path: config-as-code.tar.gz      
 
   DIGIT-deployment:
-    needs: terraform_infra_creation
+    needs: Terraform_Infra_Creation
     runs-on: ubuntu-latest
     env:
       TF_IN_AUTOMATION: "true"
@@ -249,10 +242,7 @@ jobs:
           sudo apt install -y gnupg
           wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux
           chmod +x sops-v3.7.1.linux
-          sudo mv sops-v3.7.1.linux /usr/local/bin/sops   
-      - name: displaying updated egov-demo.yaml
-        run: cat egov-demo.yaml
-        working-directory: config-as-code/environments          
+          sudo mv sops-v3.7.1.linux /usr/local/bin/sops            
       - name: digit deployment
         run: go run digit_installer.go
         working-directory: deploy-as-code/deployer 
